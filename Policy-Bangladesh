@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rizz Live — Policy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g: #00C87A;
+  --gd: #007A4A;
+  --gdark: #003D24;
+  --gl: rgba(0,200,122,0.12);
+  --r: #FF3D5A;
+  --rl: rgba(255,61,90,0.1);
+  --gold: #FFB800;
+  --goldl: rgba(255,184,0,0.1);
+  --bg: #0A0F0D;
+  --bg2: #0F1610;
+  --card: #111A14;
+  --card2: #162019;
+  --border: rgba(0,200,122,0.15);
+  --border2: rgba(255,255,255,0.07);
+  --text: #E8F5EE;
+  --muted: #7A9E8A;
+  --sh: 0 4px 24px rgba(0,0,0,0.4);
+  --sh2: 0 12px 40px rgba(0,0,0,0.6);
+  --rad: 20px;
+  --font-en: 'Cabinet Grotesk', sans-serif;
+  --font-bn: 'Hind Siliguri', sans-serif;
+  --font-display: 'Cabinet Grotesk', sans-serif;
+  --font-display-bn: 'Noto Serif Bengali', serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{background:var(--bg);font-family:var(--font-en);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden;}
+body.bn{font-family:var(--font-bn);}
+
+/* ── BG GRID ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,200,122,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,122,0.03) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0;
+}
+
+/* ── LANG SWITCHER ── */
+.lang-wrap{position:fixed;top:12px;right:12px;z-index:9999;}
+.lang-btn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(15,22,16,0.9);
+  border:1px solid var(--border);
+  border-radius:30px;padding:7px 14px;
+  cursor:pointer;font-size:12px;font-weight:700;
+  color:var(--text);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+  transition:all 0.2s;-webkit-tap-highlight-color:transparent;
+  font-family:var(--font-en);letter-spacing:0.5px;
+}
+.lang-btn:active{transform:scale(0.95);}
+.lang-btn .flag{font-size:15px;}
+.lang-chevron{width:14px;height:14px;opacity:0.5;transition:transform 0.25s;}
+.lang-chevron svg{width:14px;height:14px;stroke:var(--text);stroke-width:2.5;fill:none;display:block;}
+.lang-wrap.open .lang-chevron{transform:rotate(180deg);}
+
+.lang-dd{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:rgba(15,22,16,0.97);
+  border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;min-width:170px;
+  box-shadow:0 16px 50px rgba(0,0,0,0.7);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  opacity:0;transform:translateY(-10px) scale(0.96);
+  pointer-events:none;
+  transition:all 0.22s cubic-bezier(0.34,1.5,0.64,1);
+}
+.lang-wrap.open .lang-dd{opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
+.lang-opt{
+  display:flex;align-items:center;gap:12px;padding:13px 16px;
+  cursor:pointer;transition:background 0.15s;
+  border-bottom:1px solid var(--border2);
+  -webkit-tap-highlight-color:transparent;
+}
+.lang-opt:last-child{border-bottom:none;}
+.lang-opt:active,.lang-opt:hover{background:var(--gl);}
+.lang-opt-flag{font-size:22px;}
+.lang-opt-name{font-size:13px;font-weight:700;color:var(--text);font-family:var(--font-en);}
+.lang-opt-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.lang-opt-check{
+  margin-left:auto;width:20px;height:20px;border-radius:50%;
+  background:var(--g);display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.2s;flex-shrink:0;
+}
+.lang-opt-check svg{width:10px;height:10px;stroke:#000;stroke-width:3;fill:none;}
+.lang-opt.active .lang-opt-check{opacity:1;}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:relative;z-index:10;
+  background:rgba(5,10,7,0.95);
+  height:42px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;border-bottom:1px solid var(--border2);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.topbar::after{
+  content:'';position:absolute;left:0;bottom:0;width:100%;height:2px;
+  background:linear-gradient(90deg,var(--r),var(--gold),var(--g),var(--r));
+  background-size:300%;animation:bar-slide 4s linear infinite;
+}
+@keyframes bar-slide{0%{background-position:0%}100%{background-position:300%}}
+.tb-left{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-family:var(--font-en);}
+body.bn .tb-left{font-family:var(--font-bn);}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--r);animation:dot-pulse 2s ease infinite;flex-shrink:0;}
+@keyframes dot-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,61,90,0.5)}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(255,61,90,0)}}
+.tb-live{
+  background:var(--r);color:#fff;font-size:9px;font-weight:800;
+  padding:3px 10px;border-radius:20px;letter-spacing:1.5px;
+  animation:badge-glow 2.5s ease infinite;font-family:var(--font-en)!important;
+}
+@keyframes badge-glow{0%,100%{box-shadow:0 0 0 0 rgba(255,61,90,0.6)}50%{box-shadow:0 0 10px 4px rgba(255,61,90,0)}}
+
+/* ── HERO ── */
+header{
+  position:relative;z-index:5;
+  padding:20px 20px 40px;overflow:hidden;
+  background:linear-gradient(165deg,#020D07 0%,#041808 30%,#062010 60%,#041408 100%);
+}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;}
+.ho1{width:280px;height:280px;top:-80px;right:-80px;background:radial-gradient(circle,rgba(0,200,122,0.2),transparent 70%);animation:orb1 8s ease-in-out infinite;}
+.ho2{width:200px;height:200px;bottom:-50px;left:-50px;background:radial-gradient(circle,rgba(255,61,90,0.15),transparent 70%);animation:orb2 10s ease-in-out infinite;}
+.ho3{width:150px;height:150px;top:50%;left:60%;background:radial-gradient(circle,rgba(255,184,0,0.1),transparent 70%);animation:orb1 12s ease-in-out infinite reverse;}
+@keyframes orb1{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,25px)}}
+@keyframes orb2{0%,100%{transform:translate(0,0)}50%{transform:translate(25px,-20px)}}
+
+/* Decorative circles */
+.deco{position:absolute;border-radius:50%;pointer-events:none;}
+.deco1{width:220px;height:220px;top:-60px;right:-60px;border:1px solid rgba(0,200,122,0.1);animation:spin 30s linear infinite;}
+.deco2{width:150px;height:150px;top:-20px;right:-20px;border:1px dashed rgba(0,200,122,0.07);animation:spin 20s linear infinite reverse;}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+.hero-inner{position:relative;z-index:2;padding-top:15px;}
+
+.hero-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,200,122,0.08);border:1px solid rgba(0,200,122,0.2);
+  border-radius:30px;padding:5px 14px;
+  font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:22px;
+  font-family:var(--font-en);letter-spacing:0.3px;
+  animation:fadeUp 0.5s ease 0.1s both;
+}
+body.bn .hero-chip{font-family:var(--font-bn);}
+
+.hero-brand{display:flex;align-items:center;gap:16px;margin-bottom:20px;animation:fadeUp 0.5s ease 0.2s both;}
+.logo-box{
+  width:68px;height:68px;
+  background:linear-gradient(135deg,#1a3028,#0d1f16);
+  border:1px solid rgba(0,200,122,0.25);
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5),0 0 0 1px rgba(0,200,122,0.1);
+  flex-shrink:0;animation:logoFloat 5s ease-in-out infinite 1s;
+}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.logo-box svg{width:40px;height:40px;}
+.brand-title{
+  font-family:var(--font-display);font-size:38px;font-weight:800;
+  color:#fff;line-height:1;letter-spacing:-1px;
+}
+body.bn .brand-title{font-family:var(--font-display-bn);font-size:32px;}
+.brand-title em{color:var(--gold);font-style:italic;}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:5px;font-family:var(--font-en);}
+
+.hero-desc{
+  font-size:13px;color:rgba(255,255,255,0.5);
+  line-height:1.8;max-width:320px;margin-bottom:26px;
+  animation:fadeUp 0.5s ease 0.3s both;
+}
+body.bn .hero-desc{font-family:var(--font-bn);}
+
+.hero-stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:10px;margin-bottom:22px;
+  animation:fadeUp 0.5s ease 0.4s both;
+}
+.hstat{
+  background:rgba(0,200,122,0.06);
+  border:1px solid rgba(0,200,122,0.15);
+  border-radius:16px;padding:14px 8px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hstat::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,200,122,0.3),transparent);
+}
+.hstat-val{
+  font-family:var(--font-display);font-size:22px;font-weight:800;
+  color:var(--gold);line-height:1;
+}
+body.bn .hstat-val{font-family:var(--font-display-bn);}
+.hstat-lbl{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:0.5px;font-family:var(--font-en);}
+
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;animation:fadeUp 0.5s ease 0.5s both;}
+.htag{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:5px 13px;
+  font-size:11px;color:rgba(255,255,255,0.55);
+  font-family:var(--font-en);
+}
+body.bn .htag{font-family:var(--font-bn);}
+.htag-dot{width:5px;height:5px;border-radius:50%;background:var(--g);flex-shrink:0;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* WAVE */
+.wave{position:relative;z-index:4;line-height:0;margin-top:-1px;}
+.wave svg{width:100%;display:block;}
+
+/* ── CONTAINER ── */
+.container{position:relative;z-index:5;max-width:480px;margin:0 auto;padding:0 14px 100px;}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{
+  display:flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--g);padding:26px 2px 14px;font-family:var(--font-en);
+}
+body.bn .sec-lbl{font-family:var(--font-bn);letter-spacing:0.5px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+.sec-icon{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--gl);display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+
+/* ── MENU CARDS ── */
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+
+.mcard{
+  position:relative;
+  background:var(--card);
+  border-radius:var(--rad);
+  padding:22px 16px 18px;
+  cursor:pointer;overflow:hidden;
+  border:1px solid var(--border2);
+  transition:transform 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  box-shadow:var(--sh);
+  /* NO opacity:0 — cards always visible */
+}
+.mcard:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:var(--border);}
+.mcard:active{transform:scale(0.97);}
+
+/* Glow border on hover */
+.mcard-glow{
+  position:absolute;inset:-1px;border-radius:var(--rad);
+  background:linear-gradient(135deg,var(--g),var(--gold),var(--r));
+  background-size:300%;opacity:0;z-index:0;
+  animation:glow-move 4s linear infinite;transition:opacity 0.3s;
+}
+@keyframes glow-move{0%{background-position:0%}100%{background-position:300%}}
+.mcard-inner-bg{
+  position:absolute;inset:1px;border-radius:calc(var(--rad) - 1px);
+  background:var(--card);z-index:1;
+}
+.mcard:hover .mcard-glow{opacity:1;}
+
+/* Shine sweep */
+.mcard-shine{
+  position:absolute;top:0;left:-150%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);
+  transform:skewX(-15deg);z-index:3;pointer-events:none;
+}
+.mcard:hover .mcard-shine{animation:shine-sweep 0.6s ease forwards;}
+@keyframes shine-sweep{to{left:160%;}}
+
+/* Ripple */
+.ripple{position:absolute;border-radius:50%;background:rgba(0,200,122,0.15);transform:scale(0);animation:ripple-out 0.6s linear;pointer-events:none;z-index:2;}
+@keyframes ripple-out{to{transform:scale(5);opacity:0;}}
+
+.mcard-body{position:relative;z-index:4;}
+
+.mcard-icon{
+  width:56px;height:56px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:18px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+.mcard-icon::after{
+  content:'';position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent 60%);
+}
+.i-green{background:linear-gradient(135deg,#00E890,#00875A);}
+.i-red{background:linear-gradient(135deg,#FF7A90,#E0002A);}
+.i-gold{background:linear-gradient(135deg,#FFD060,#C88000);}
+.i-teal{background:linear-gradient(135deg,#40FFCC,#009F78);}
+
+.mcard-badge{
+  position:absolute;top:14px;right:14px;z-index:5;
+  background:var(--r);color:#fff;
+  font-size:8px;font-weight:800;padding:3px 9px;
+  border-radius:20px;letter-spacing:1px;
+  font-family:var(--font-en)!important;text-transform:uppercase;
+  animation:badge-glow 2.5s ease infinite;
+}
+
+.mcard-title{
+  font-size:16px;font-weight:800;color:var(--text);
+  margin-bottom:6px;line-height:1.2;font-family:var(--font-display);
+}
+body.bn .mcard-title{font-family:var(--font-bn);}
+.mcard-desc{font-size:11.5px;color:var(--muted);line-height:1.5;}
+body.bn .mcard-desc{font-family:var(--font-bn);}
+
+.mcard-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:16px;padding-top:14px;
+  border-top:1px solid var(--border2);
+}
+.mcard-tag{font-size:10px;font-weight:700;color:var(--g);letter-spacing:1px;text-transform:uppercase;font-family:var(--font-en);}
+body.bn .mcard-tag{font-family:var(--font-bn);text-transform:none;letter-spacing:0;}
+.mcard-arr{
+  width:30px;height:30px;border-radius:9px;
+  background:rgba(0,200,122,0.1);border:1px solid rgba(0,200,122,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--g);transition:all 0.2s;
+}
+.mcard:active .mcard-arr,.mcard:hover .mcard-arr{background:var(--g);color:#000;transform:translateX(2px);}
+
+/* ── BACK BTN ── */
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 20px;border:1px solid var(--border2);
+  border-radius:30px;background:var(--card);
+  cursor:pointer;font-size:13px;font-weight:600;
+  color:var(--muted);margin:16px 0 8px;
+  transition:all 0.2s;font-family:var(--font-en);
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:var(--sh);
+}
+body.bn .back-btn{font-family:var(--font-bn);}
+.back-btn:active{background:var(--gl);border-color:var(--g);color:var(--g);transform:scale(0.97);}
+
+.page-title{
+  font-family:var(--font-display);font-size:26px;font-weight:800;
+  color:var(--text);margin:6px 0 22px;line-height:1.2;
+  animation:fadeUp 0.4s ease both;
+}
+body.bn .page-title{font-family:var(--font-display-bn);font-size:22px;}
+
+/* ── TABS ── */
+.tab{display:none;}
+.tab.active{display:block;animation:pageIn 0.3s ease;}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ACCORDION ── */
+.acc{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:var(--rad);margin-bottom:10px;overflow:hidden;
+  transition:border-color 0.25s,box-shadow 0.25s;
+  box-shadow:var(--sh);
+}
+.acc.open{border-color:rgba(0,200,122,0.25);box-shadow:0 8px 40px rgba(0,200,122,0.08);}
+.acc-head{
+  display:flex;align-items:center;gap:12px;padding:16px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;
+}
+.acc-head:active{background:rgba(0,200,122,0.05);}
+.acc-num{
+  width:42px;height:42px;border-radius:12px;
+  background:rgba(0,200,122,0.08);border:1px solid rgba(0,200,122,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--g);
+  flex-shrink:0;transition:all 0.25s;
+}
+body.bn .acc-num{font-family:var(--font-display-bn);}
+.acc.open .acc-num{background:var(--g);color:#000;border-color:var(--g);}
+.acc-info{flex:1;min-width:0;}
+.acc-title{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+body.bn .acc-title{font-family:var(--font-bn);}
+.acc-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--font-en);}
+.acc-tog{
+  width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;
+}
+.acc.open .acc-tog{background:var(--gl);transform:rotate(180deg);}
+.acc-tog svg{width:16px;height:16px;stroke:var(--g);stroke-width:2.5;fill:none;}
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.acc.open .acc-body{max-height:8000px;}
+.acc-inner{padding:0 16px 20px;border-top:1px solid var(--border2);}
+
+/* ── SUBLABEL ── */
+.sub-lbl{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--g);
+  margin:18px 0 10px;display:flex;align-items:center;gap:8px;font-family:var(--font-en);
+}
+body.bn .sub-lbl{font-family:var(--font-bn);text-transform:none;letter-spacing:0;}
+.sub-lbl::after{content:'';flex:1;height:1px;background:var(--border2);}
+
+/* ── INFO BOX ── */
+.ibox{border-radius:13px;padding:13px 15px;margin:10px 0;border-left:3px solid var(--g);background:var(--gl);}
+.ibox.warn{border-left-color:var(--gold);background:var(--goldl);}
+.ibox.danger{border-left-color:var(--r);background:var(--rl);}
+.ibox.ok{border-left-color:var(--g);background:rgba(0,200,122,0.08);}
+.ibox-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:5px;font-family:var(--font-en);}
+body.bn .ibox-lbl{font-family:var(--font-bn);text-transform:none;letter-spacing:0;}
+.ibox.warn .ibox-lbl{color:var(--gold);}
+.ibox.ok .ibox-lbl{color:var(--g);}
+.ibox-txt{font-size:13px;color:var(--text);line-height:1.65;}
+body.bn .ibox-txt{font-family:var(--font-bn);}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:10px 0;border-radius:14px;border:1px solid var(--border2);box-shadow:var(--sh);}
+table{width:100%;border-collapse:collapse;min-width:220px;}
+thead{background:rgba(0,200,122,0.07);}
+th{padding:11px 13px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);white-space:nowrap;font-family:var(--font-en);}
+td{padding:11px 13px;border-bottom:1px solid var(--border2);font-size:13px;color:var(--text);transition:background 0.15s;}
+body.bn td{font-family:var(--font-bn);}
+tr:hover td{background:rgba(0,200,122,0.04);}
+tr:last-child td{border-bottom:none;}
+.tg{color:var(--g);font-weight:700;}
+.tr{color:var(--r);font-weight:700;}
+.tgold{color:var(--gold);font-weight:700;}
+.tbold{font-weight:700;color:var(--text);}
+
+/* ── BLIST ── */
+.blist{list-style:none;margin:6px 0;}
+.blist li{
+  padding:9px 0 9px 24px;position:relative;
+  font-size:13px;color:var(--text);line-height:1.6;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+body.bn .blist li{font-family:var(--font-bn);}
+.blist li:last-child{border-bottom:none;}
+.blist li::before{
+  content:'';position:absolute;left:0;top:17px;
+  width:9px;height:9px;border-radius:50%;
+  background:linear-gradient(135deg,var(--g),#009955);
+}
+.blist.danger li::before{background:linear-gradient(135deg,#FF9AA8,var(--r));}
+.blist.ok li::before{background:linear-gradient(135deg,#80FFD0,var(--g));}
+
+/* ── STAT ROW ── */
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+.stat-card{
+  background:rgba(0,200,122,0.07);border:1px solid rgba(0,200,122,0.15);
+  border-radius:14px;padding:16px;text-align:center;position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:rgba(0,200,122,0.08);}
+.stat-val{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--g);line-height:1;margin-bottom:4px;}
+body.bn .stat-val{font-family:var(--font-display-bn);}
+.stat-lbl{font-size:11px;color:var(--muted);font-family:var(--font-en);}
+body.bn .stat-lbl{font-family:var(--font-bn);}
+
+.wbadge{display:inline-block;background:rgba(0,200,122,0.1);border:1px solid rgba(0,200,122,0.2);color:var(--g);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+
+/* ── CONTACT CARD ── */
+.contact-card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:16px;padding:14px;margin:10px 0;
+  transition:all 0.2s;cursor:pointer;box-shadow:var(--sh);
+}
+.contact-card:active,.contact-card:hover{border-color:var(--border);background:rgba(0,200,122,0.06);}
+.c-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.c-icon.wa{background:linear-gradient(135deg,#00E87A,#009950);}
+.c-icon.em{background:linear-gradient(135deg,rgba(0,200,122,0.3),rgba(0,200,122,0.1));}
+.c-icon.tm{background:linear-gradient(135deg,rgba(100,160,255,0.3),rgba(60,100,200,0.2));}
+.c-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px;font-family:var(--font-en);}
+body.bn .c-lbl{font-family:var(--font-bn);text-transform:none;letter-spacing:0;}
+.c-val{font-size:13px;font-weight:600;color:var(--text);}
+body.bn .c-val{font-family:var(--font-bn);}
+.c-val a{color:var(--g);text-decoration:none;}
+
+/* ── CTA ── */
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:16px 20px;border:none;border-radius:14px;
+  font-size:14px;font-weight:700;font-family:var(--font-en);
+  cursor:pointer;text-decoration:none;margin:14px 0;
+  position:relative;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform 0.18s,box-shadow 0.18s;
+}
+body.bn .cta{font-family:var(--font-bn);}
+.cta::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+  background-size:300%;animation:shine-btn 2.5s ease infinite;
+}
+@keyframes shine-btn{0%{background-position:-100%}100%{background-position:400%}}
+.cta.green{background:linear-gradient(135deg,var(--g),var(--gd));color:#000;box-shadow:0 6px 25px rgba(0,200,122,0.4);}
+.cta.wa{background:linear-gradient(135deg,#25D366,#128C3A);color:#fff;box-shadow:0 6px 25px rgba(37,211,102,0.4);}
+.cta:active{transform:scale(0.97);box-shadow:none;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg2);padding:40px 20px 32px;
+  text-align:center;position:relative;overflow:hidden;
+}
+footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--r),var(--gold),var(--g),var(--r));
+  background-size:300%;animation:bar-slide 4s linear infinite;
+}
+footer::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(0,200,122,0.08),transparent 60%);
+}
+.ft-flag{font-size:36px;display:block;margin-bottom:12px;animation:logoFloat 4s ease-in-out infinite;position:relative;z-index:1;}
+.ft-logo{font-family:var(--font-display);font-size:26px;font-weight:800;color:#fff;position:relative;z-index:1;}
+body.bn .ft-logo{font-family:var(--font-display-bn);}
+.ft-logo em{color:var(--gold);font-style:italic;}
+.ft-copy{font-size:11px;color:rgba(255,255,255,0.25);margin-top:10px;line-height:1.9;position:relative;z-index:1;font-family:var(--font-en);}
+body.bn .ft-copy{font-family:var(--font-bn);}
+
+/* ── MISC ── */
+strong{font-weight:800;}
+.gt{color:var(--g);font-weight:700;}
+.rt{color:var(--r);font-weight:700;}
+.got{color:var(--gold);font-weight:700;}
+.muted-t{color:var(--muted);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(0,200,122,0.3);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- LANG SWITCHER -->
+<div class="lang-wrap" id="langWrap">
+  <button class="lang-btn" onclick="toggleLang()" aria-label="Language">
+    <span class="flag" id="langFlag">🇬🇧</span>
+    <span id="langLbl" style="font-weight:800;">EN</span>
+    <span class="lang-chevron"><svg viewBox="0 0 14 8"><polyline points="1 1 7 7 13 1"/></svg></span>
+  </button>
+  <div class="lang-dd" id="langDd">
+    <div class="lang-opt active" id="optEn" onclick="setLang('en')">
+      <span class="lang-opt-flag">🇬🇧</span>
+      <div><div class="lang-opt-name">English</div><div class="lang-opt-sub">Default Language</div></div>
+      <span class="lang-opt-check"><svg viewBox="0 0 10 8"><polyline points="1 4 3.5 7 9 1"/></svg></span>
+    </div>
+    <div class="lang-opt" id="optBn" onclick="setLang('bn')">
+      <span class="lang-opt-flag">🇧🇩</span>
+      <div><div class="lang-opt-name">বাংলা</div><div class="lang-opt-sub">Bangladesh · Bengali</div></div>
+      <span class="lang-opt-check"><svg viewBox="0 0 10 8"><polyline points="1 4 3.5 7 9 1"/></svg></span>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="tb-left"><span class="tb-dot"></span><span class="t" data-en="Rizz Live · Official" data-bn="Rizz Live · অফিসিয়াল">Rizz Live · Official</span></span>
+  <span class="tb-live">LIVE</span>
+</div>
+
+<!-- HERO -->
+<header>
+  <div class="hero-orb ho1"></div><div class="hero-orb ho2"></div><div class="hero-orb ho3"></div>
+  <div class="deco deco1"></div><div class="deco deco2"></div>
+  <div class="hero-inner">
+    <div class="hero-chip">✨ <span class="t" data-en="Official Policy Hub" data-bn="অফিসিয়াল পলিসি হাব">Official Policy Hub</span></div>
+    <div class="hero-brand">
+      <div class="logo-box" style="background: transparent; border: none; box-shadow: none;">
+        <img src="https://cdn.jsdelivr.net/gh/yourusername/rizzlive-assets@main/mascot.png" alt="Rizz Live" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(0,200,122,0.4));">
+      </div>
+      <div>
+        <div class="brand-title">Rizz <em>Live</em></div>
+        <div class="brand-sub">Policy Hub · নীতিমালা কেন্দ্র</div>
+      </div>
+    </div>
+    <p class="hero-desc t" data-en="Complete official policies, salary structure & guidelines for hosts and agencies." data-bn="হোস্ট ও এজেন্সিদের জন্য সম্পূর্ণ অফিসিয়াল নিয়মনীতি, স্যালারি স্ট্রাকচার ও গাইডলাইন।">Complete official policies, salary structure & guidelines for hosts and agencies.</p>
+
+    <div class="hero-tags">
+      <span class="htag"><span class="htag-dot"></span><span class="t" data-en="Host Policy" data-bn="হোস্ট পলিসি">Host Policy</span></span>
+      <span class="htag"><span class="htag-dot"></span><span class="t" data-en="Agency" data-bn="এজেন্সি">Agency</span></span>
+      <span class="htag"><span class="htag-dot"></span><span class="t" data-en="Support" data-bn="সাপোর্ট">Support</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="wave"><svg viewBox="0 0 480 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,20 C80,40 160,0 240,20 C320,40 400,0 480,20 L480,40 L0,40 Z" fill="#0A0F0D"/></svg></div>
+
+<div class="container">
+
+<!-- MAIN PAGE -->
+<div id="main" class="tab active">
+  <div class="sec-lbl"><span class="sec-icon">📋</span><span class="t" data-en="Policies" data-bn="নীতিমালা">Policies</span></div>
+  <div class="menu-grid">
+
+    <div class="mcard" onclick="go('host',this)">
+      <div class="mcard-glow"></div><div class="mcard-inner-bg"></div><div class="mcard-shine"></div>
+      <div class="mcard-body">
+        <div class="mcard-icon i-green">📋</div>
+        <div class="mcard-badge">UPDATE</div>
+        <div class="mcard-title t" data-en="Host Policy" data-bn="হোস্ট পলিসি">Host Policy</div>
+        <div class="mcard-desc t" data-en="Salary, bonus & all host rules" data-bn="স্যালারি, বোনাস ও সকল নিয়ম">Salary, bonus & all host rules</div>
+        <div class="mcard-foot">
+          <span class="mcard-tag t" data-en="DETAILS" data-bn="বিস্তারিত">DETAILS</span>
+          <span class="mcard-arr">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcard" onclick="go('agency',this)">
+      <div class="mcard-glow"></div><div class="mcard-inner-bg"></div><div class="mcard-shine"></div>
+      <div class="mcard-body">
+        <div class="mcard-icon i-red">🏢</div>
+        <div class="mcard-title t" data-en="Agency Policy" data-bn="এজেন্সি পলিসি">Agency Policy</div>
+        <div class="mcard-desc t" data-en="Commission, payment & terms" data-bn="কমিশন, পেমেন্ট ও শর্তাবলী">Commission, payment & terms</div>
+        <div class="mcard-foot">
+          <span class="mcard-tag t" data-en="DETAILS" data-bn="বিস্তারিত">DETAILS</span>
+          <span class="mcard-arr">›</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec-lbl"><span class="sec-icon">💬</span><span class="t" data-en="Connect" data-bn="যোগাযোগ">Connect</span></div>
+  <div class="menu-grid">
+
+    <div class="mcard" onclick="go('whatsapp',this)">
+      <div class="mcard-glow"></div><div class="mcard-inner-bg"></div><div class="mcard-shine"></div>
+      <div class="mcard-body">
+        <div class="mcard-icon i-teal">💬</div>
+        <div class="mcard-title">WhatsApp</div>
+        <div class="mcard-desc t" data-en="Get updates directly" data-bn="সরাসরি আপডেট পান">Get updates directly</div>
+        <div class="mcard-foot">
+          <span class="mcard-tag t" data-en="JOIN" data-bn="যোগ দিন">JOIN</span>
+          <span class="mcard-arr">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcard" onclick="go('cs',this)">
+      <div class="mcard-glow"></div><div class="mcard-inner-bg"></div><div class="mcard-shine"></div>
+      <div class="mcard-body">
+        <div class="mcard-icon i-gold">📞</div>
+        <div class="mcard-title t" data-en="CS Team" data-bn="CS টিম">CS Team</div>
+        <div class="mcard-desc t" data-en="Talk to support team" data-bn="সাপোর্ট টিমের সাথে কথা বলুন">Talk to support team</div>
+        <div class="mcard-foot">
+          <span class="mcard-tag t" data-en="HELP" data-bn="সাহায্য">HELP</span>
+          <span class="mcard-arr">›</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ibox warn" style="margin-top:20px;">
+    <div class="ibox-lbl">⏰ <span class="t" data-en="Weekly Period" data-bn="সাপ্তাহিক পিরিয়ড">Weekly Period</span></div>
+    <div class="ibox-txt t" data-en="Every <strong>Sunday 12:00 PM BST</strong> to the next Sunday 12:00 PM BST." data-bn="প্রতি <strong>রবিবার দুপুর ১২:০০ BST</strong> থেকে পরের রবিবার দুপুর ১२:०० BST পর্যন্ত।">Every <strong>Sunday 12:00 PM BST</strong> to the next Sunday 12:00 PM BST.</div>
+  </div>
+</div>
+
+<!-- HOST POLICY -->
+<div id="host" class="tab">
+  <button class="back-btn" onclick="go('main')">← <span class="t" data-en="Back" data-bn="ফিরে যান">Back</span></button>
+  <div class="page-title t" data-en="Host Policy" data-bn="হোস্ট পলিসি">Host Policy</div>
+
+  <div class="acc open" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="01" data-bn="०१">01</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Salary Structure" data-bn="স্যালারি স্ট্রাকচার">Salary Structure</div><div class="acc-sub">Host Salary Structure</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="sub-lbl t" data-en="1.1 Personal Gift Share" data-bn="१.१ ব্যক্তিগত গিফট শেয়ার">1.1 Personal Gift Share</div>
+      <div class="ibox ok">
+        <div class="ibox-lbl">✅ <span class="t" data-en="Basic Share" data-bn="বেসিক শেয়ার">Basic Share</span></div>
+        <div class="ibox-txt"><strong class="t" data-en="Host receives: 100%" data-bn="হোস্ট পাবেন: १००%">Host receives: 100%</strong></div>
+      </div>
+      <div class="ibox">
+        <div class="ibox-lbl">📌 <span class="t" data-en="Example" data-bn="उदाहरण">Example</span></div>
+        <div class="ibox-txt t" data-en="If a user gifts <strong>10,000 Coins</strong>, the host receives <strong>10,000 Rubies.</strong>" data-bn="কোনো ইউজার <strong>१०,०००  Coins</strong> গিফট করলে হোস্ট পাবেন <strong>१०,००० Rubies।</strong>">If a user gifts <strong>10,000 Coins</strong>, the host receives <strong>10,000 Rubies.</strong></div>
+      </div>
+
+      <div class="sub-lbl t" data-en="1.2 Weekly Bonus" data-bn="१.२ सাপ्ताহिक बोनस">1.2 Weekly Bonus</div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-val">30%</div><div class="stat-lbl t" data-en="Weekly Bonus" data-bn="सাপ्ताहिक बोनस">Weekly Bonus</div></div>
+        <div class="stat-card"><div class="stat-val t" data-en="10h" data-bn="१०ঘ">10h</div><div class="stat-lbl t" data-en="Min Hours" data-bn="न्यूनतम समय">Min Hours</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Valid Hours</th><th>Valid Days</th><th>Weekly Bonus</th></tr></thead>
+        <tbody><tr><td class="tg t" data-en="10" data-bn="१०">10</td><td class="tg t" data-en="4" data-bn="४">4</td><td class="tbold">30%</td></tr></tbody></table>
+      </div>
+      <div class="ibox ok">
+        <div class="ibox-lbl">📌 <span class="t" data-en="Example" data-bn="उदाहरण">Example</span></div>
+        <div class="ibox-txt t" data-en="Earn <strong>100,000 Rubies</strong> in a week → get <strong>30,000 Ruby bonus (30%)</strong> every Monday." data-bn="সপ্তাহে <strong>१,००,००० Rubies</strong> আয় করলে <strong>३०,००० Ruby বোনাস (३०%)</strong> পাবেন সোমবার।">Earn <strong>100,000 Rubies</strong> in a week → get <strong>30,000 Ruby bonus (30%)</strong> every Monday.</div>
+      </div>
+
+      <div class="sub-lbl t" data-en="1.3 Key Rules" data-bn="१.३ गुरुत्वपूर्ण नियम">1.3 Key Rules</div>
+      <ul class="blist">
+        <li><strong class="t" data-en="Withdrawal Rate:" data-bn="উইথড্র রেট:">Withdrawal Rate:</strong> <span class="t" data-en="20,000 Ruby = 1 USD" data-bn="२०,००० Ruby = १ USD">20,000 Ruby = 1 USD</span></li>
+        <li><strong class="t" data-en="Day Change:" data-bn="দিন পরিবর্তন:">Day Change:</strong> <span class="got t" data-en="12:00 PM BST" data-bn="दुपहर १२:०० BST">12:00 PM BST</span></li>
+        <li><strong class="t" data-en="Weekly Period:" data-bn="সাপ্তাহিক পিরিয়ড:">Weekly Period:</strong> <span class="got t" data-en="Sun 12PM → Sun 12PM" data-bn="रवि १२PM → रवि १२PM">Sun 12PM → Sun 12PM</span></li>
+        <li><strong>Valid Day:</strong> <span class="t" data-en="Min 120 min (2 hrs) live" data-bn="न्यूनतम १२० मिनिट (२ घंटा) लाइव">Min 120 min (2 hrs) live</span></li>
+        <li><strong>Valid Hour:</strong> <span class="t" data-en="60+ min = 1 Valid Hour" data-bn="६०+ मिनिट = १ Valid Hour">60+ min = 1 Valid Hour</span></li>
+        <li><strong class="t" data-en="Min Session:" data-bn="সর্বনিম্ন সেশন:">Min Session:</strong> <span class="t" data-en="Under 30 min won't count" data-bn="३० मिनिटको कम गणना हुँदैन">Under 30 min won't count</span></li>
+        <li><strong class="t" data-en="Bonus Payment:" data-bn="বোনাস পেমেন্ট:">Bonus Payment:</strong> <span class="gt t" data-en="Every Monday in Rubies" data-bn="প्रत्येक सोमबार Rubies-मा">Every Monday in Rubies</span></li>
+        <li><strong class="t" data-en="Withdraw:" data-bn="উইথড্র:">Withdraw:</strong> <span class="t" data-en="Once daily, min $10 USD" data-bn="प्रतिदिन एक पटक, न्यूनतम $१०">Once daily, min $10 USD</span></li>
+      </ul>
+      <div class="ibox danger">
+        <div class="ibox-lbl">⚠️ <span class="t" data-en="Strict Rule" data-bn="কঠোর নিয়ম">Strict Rule</span></div>
+        <div class="ibox-txt t" data-en="Any fraud or misuse → <span class='rt'>Warning / Suspension / Ban</span>" data-bn="कुनै पनि धोखाधडी वा दुरुपयोग → <span class='rt'>Warning / Suspension / Ban</span>">Any fraud or misuse → <span class="rt">Warning / Suspension / Ban</span></div>
+      </div>
+
+      <div class="sub-lbl t" data-en="1.4 Agency Change" data-bn="१.४ एजेन्सी परिवर्तन">1.4 Agency Change</div>
+      <ul class="blist">
+        <li class="t" data-en="No live for <strong>120 days</strong>" data-bn="<strong>१२० दिन</strong> कुनै लाइव नगरे">No live for <strong>120 days</strong></li>
+        <li class="t" data-en="No contact for <strong>2 weeks</strong>" data-bn="<strong>२ हप्ता</strong> सम्पर्क न भएमा">No contact for <strong>2 weeks</strong></li>
+        <li class="t" data-en="By mutual agreement" data-bn="पारस्परिक सहमति द्वारा">By mutual agreement</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="02" data-bn="०२">02</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Game Commission" data-bn="गेम कमिशन">Game Commission</div><div class="acc-sub">Host Game Commissions</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="tbl-wrap"><table><thead><tr><th>Bet (Coins)</th><th>Reward (Ruby)</th></tr></thead><tbody><tr><td class="tg">1,000</td><td class="tbold">1</td></tr></tbody></table></div>
+      <ul class="blist">
+        <li class="t" data-en="Every <strong>1,000 Coins</strong> used in games → host earns <strong>1 Ruby</strong>" data-bn="प्रत्येक <strong>१,००० Coins</strong> खेलमा प्रयोग गरेमा → होस्ट पाउँछन् <strong>१ Ruby</strong>">Every <strong>1,000 Coins</strong> used in games → host earns <strong>1 Ruby</strong></li>
+        <li class="t" data-en="This income does <span class='rt'>NOT count</span> toward weekly targets" data-bn="यो आय साप्ताहिक लक्ष्यमा <span class='rt'>गणना हुँदैन</span>">This income does <span class="rt">NOT count</span> toward weekly targets</li>
+        <li class="t" data-en="<span class='gt'>Instant credit</span> at end of each stream" data-bn="प्रत्येक स्ट्रिम अन्तमा <span class='gt'>तत्काल क्रेडिट</span>"><span class="gt">Instant credit</span> at end of each stream</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="03" data-bn="०३">03</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Rookie Host Policy" data-bn="नयाँ होस्ट नीति">Rookie Host Policy</div><div class="acc-sub">New Host — First 4 Weeks</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="tbl-wrap"><table><thead><tr><th class="t" data-en="Week" data-bn="सप्ताह">Week</th><th>Target (Ruby)</th><th class="t" data-en="Days" data-bn="दिन">Days</th><th class="t" data-en="Hrs" data-bn="घंटा">Hrs</th><th>Guarantee</th></tr></thead>
+      <tbody>
+        <tr><td><span class="wbadge t" data-en="Wk 1" data-bn="सप्ताह १">Wk 1</span></td><td class="tgold">50,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$5</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 2" data-bn="सप्ताह २">Wk 2</span></td><td class="tgold">100,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$5</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 3" data-bn="सप्ताह ३">Wk 3</span></td><td class="tgold">150,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$5</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 4" data-bn="सप्ताह ४">Wk 4</span></td><td class="tgold">150,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$5</td></tr>
+      </tbody></table></div>
+      <ul class="blist">
+        <li class="t" data-en="New hosts need <strong>approval</strong> for first 4-week guarantee" data-bn="नयाँ होस्टहरूलाई पहिलो ४-हप्तेको ग्यारान्टीको लागि <strong>अनुमोदन</strong> चाहिन्छ">New hosts need <strong>approval</strong> for first 4-week guarantee</li>
+        <li class="t" data-en="Missing a week does <span class='gt'>NOT cancel</span> the next week's guarantee" data-bn="एक हप्ता हराएमा अर्को हप्तेको ग्यारान्टी <span class='gt'>रद्द हुँदैन</span>">Missing a week does <span class="gt">NOT cancel</span> the next week's guarantee</li>
+        <li class="t" data-en="If Valid Days & Hours not met, basic policy applies" data-bn="यदि वैध दिनहरू र घंटा पूरा नभएमा, आधारभूत नीति लागू हुन्छ">If Valid Days & Hours not met, basic policy applies</li>
+        <li class="t" data-en="<span class='rt'>From Week 5</span> onward, only basic policy applies" data-bn="<span class='rt'>पाचौं सप्ताहदेखि</span> अगाडि, केवल आधारभूत नीति लागू हुन्छ"><span class="rt">From Week 5</span> onward, only basic policy applies</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="04" data-bn="०४">04</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Prestige Host Policy" data-bn="प्रतिष्ठित होस्ट नीति">Prestige Host Policy</div><div class="acc-sub">Premium Host Program</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="tbl-wrap"><table><thead><tr><th class="t" data-en="Week" data-bn="सप्ताह">Week</th><th>Target (Ruby)</th><th class="t" data-en="Days" data-bn="दिन">Days</th><th class="t" data-en="Hrs" data-bn="घंटा">Hrs</th><th>Guarantee</th></tr></thead>
+      <tbody>
+        <tr><td><span class="wbadge t" data-en="Wk 1" data-bn="सप्ताह १">Wk 1</span></td><td class="tgold">100,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$15</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 2" data-bn="सप्ताह २">Wk 2</span></td><td class="tgold">150,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$15</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 3" data-bn="सप्ताह ३">Wk 3</span></td><td class="tgold">200,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$15</td></tr>
+        <tr><td><span class="wbadge t" data-en="Wk 4+" data-bn="सप्ताह ४+">Wk 4+</span></td><td class="tgold">300,000</td><td class="tg">4</td><td class="tg">10</td><td class="tbold">$15</td></tr>
+      </tbody></table></div>
+      <div class="sub-lbl t" data-en="Requirements" data-bn="आवश्यकताहरू">Requirements</div>
+      <ul class="blist ok">
+        <li class="t" data-en="Clean and professional appearance" data-bn="सफा र व्यावसायिक उपस्थिति">Clean and professional appearance</li>
+        <li class="t" data-en="Follow schedule and complete required hours" data-bn="समय तालिका पालन गर्नुहोस् र आवश्यक घंटा पूरा गर्नुहोस्">Follow schedule and complete required hours</li>
+        <li class="t" data-en="Tidy, well-lit background" data-bn="सुव्यवस्थित, राम्रो प्रकाशित पृष्ठभूमि">Tidy, well-lit background</li>
+        <li class="t" data-en="Good audio and video quality" data-bn="राम्रो अडियो र भिडियो गुणस्तर">Good audio and video quality</li>
+        <li class="t" data-en="Actively engage with viewers" data-bn="दर्शकहरूसँग सक्रिय रूपमा संलग्न हुनुहोस्">Actively engage with viewers</li>
+        <li class="t" data-en="Join events per team guidelines" data-bn="टिम दिशानिर्देशन अनुसार कार्यक्रमहरूमा सामेल हुनुहोस्">Join events per team guidelines</li>
+      </ul>
+      <div class="sub-lbl t" data-en="Removal Reasons" data-bn="हटाइने कारणहरू">Removal Reasons</div>
+      <ul class="blist danger">
+        <li class="t" data-en="Irregular streaming or bad attitude" data-bn="अनियमित स्ट्रिमिङ वा खराब दृष्टिकोण">Irregular streaming or bad attitude</li>
+        <li class="t" data-en="Ignoring or disrespecting viewers" data-bn="दर्शकहरूलाई बेवास्ता गर्नु वा अनादर गर्नु">Ignoring or disrespecting viewers</li>
+        <li class="t" data-en="Messy setup not improved" data-bn="अव्यवस्थित सेटअप सुधारिएन">Messy setup not improved</li>
+        <li class="t" data-en="Not following team instructions" data-bn="टिम निर्देशन पालन नगर्नु">Not following team instructions</li>
+        <li class="t" data-en="Poor stream quality not fixed" data-bn="कमजोर स्ट्रिम गुणस्तर ठीक नगरिएको">Poor stream quality not fixed</li>
+        <li class="t" data-en="Violating platform rules or laws" data-bn="प्ल्याटफर्म नियम वा कानून उल्लङ्घन गर्नु">Violating platform rules or laws</li>
+      </ul>
+    </div></div>
+  </div>
+</div>
+
+<!-- AGENCY -->
+<div id="agency" class="tab">
+  <button class="back-btn" onclick="go('main')">← <span class="t" data-en="Back" data-bn="ফিরে যান">Back</span></button>
+  <div class="page-title t" data-en="Agency Policy" data-bn="एजेन्सी नीति">Agency Policy</div>
+
+  <div class="acc open" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="01" data-bn="०१">01</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Agency Commission" data-bn="एजेन्सी कमिशन">Agency Commission</div><div class="acc-sub">Commission Tiers</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="tbl-wrap"><table><thead><tr><th class="t" data-en="Level" data-bn="स्तर">Level</th><th class="t" data-en="Weekly Earnings (Ruby)" data-bn="साप्ताहिक आय (Ruby)">Weekly Earnings (Ruby)</th><th class="t" data-en="Commission" data-bn="कमिशन">Commission</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Lv.1</strong></td><td class="muted-t t" data-en="Under 10M" data-bn="१० करोड भन्दा कम">Under 10M</td><td class="tg">16%</td></tr>
+        <tr><td><strong>Lv.2</strong></td><td class="muted-t">10M – 30M</td><td class="tg">18%</td></tr>
+        <tr><td><strong>Lv.3</strong></td><td class="muted-t t" data-en="Above 30M" data-bn="३० करोड भन्दा माथि">Above 30M</td><td class="tg">20%</td></tr>
+      </tbody></table></div>
+      <div class="sub-lbl t" data-en="Requirements" data-bn="आवश्यकताहरू">Requirements</div>
+      <ul class="blist">
+        <li class="t" data-en="Minimum <strong>5 active hosts</strong> per week" data-bn="प्रति हप्ता न्यूनतम <strong>५ जना सक्रिय होस्ट</strong>">Minimum <strong>5 active hosts</strong> per week</li>
+        <li class="t" data-en="Encourage hosts to participate in live & events" data-bn="होस्टहरूलाई लाइभ र कार्यक्रमहरूमा भाग लिन प्रोत्साहित गर्नुहोस्">Encourage hosts to participate in live & events</li>
+      </ul>
+      <div class="ibox warn">
+        <div class="ibox-lbl">⏰ <span class="t" data-en="Weekly Period" data-bn="साप्ताहिक अवधि">Weekly Period</span></div>
+        <div class="ibox-txt"><strong class="t" data-en="Start:" data-bn="शुरु:">Start:</strong> <span class="t" data-en="Sunday 12:00 PM BST" data-bn="आइतबार दोपहर १२:०० BST">Sunday 12:00 PM BST</span> &nbsp;·&nbsp; <strong class="t" data-en="End:" data-bn="अन्त:">End:</strong> <span class="t" data-en="Next Sunday 12:00 PM BST" data-bn="अर्को आइतबार दोपहर १२:०० BST">Next Sunday 12:00 PM BST</span></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="02" data-bn="०२">02</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Host Activation Salary" data-bn="होस्ट सक्रियकरण तनख्वाह">Host Activation Salary</div><div class="acc-sub">Monthly Agency Tiers</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="tbl-wrap"><table><thead><tr><th class="t" data-en="Level" data-bn="स्तर">Level</th><th class="t" data-en="Monthly Target" data-bn="मासिक लक्ष्य">Monthly Target</th><th class="t" data-en="Hosts" data-bn="होस्ट">Hosts</th><th class="t" data-en="Basic Pay" data-bn="आधार वेतन">Basic Pay</th></tr></thead>
+      <tbody>
+        <tr><td><strong>L1</strong></td><td class="muted-t t" data-en="Under 10M" data-bn="१० करोड भन्दा कम">Under 10M</td><td>—</td><td>—</td></tr>
+        <tr><td><strong>L2</strong></td><td class="tgold">10M+</td><td class="tg">20</td><td class="tbold">$25</td></tr>
+        <tr><td><strong>L3</strong></td><td class="tgold">50M+</td><td class="tg">30</td><td class="tbold">$225</td></tr>
+        <tr><td><strong>L4</strong></td><td class="tgold">100M+</td><td class="tg">50</td><td class="tbold">$500</td></tr>
+        <tr><td><strong>L5</strong></td><td class="tgold">200M+</td><td class="tg">50</td><td class="tbold">$1,000</td></tr>
+      </tbody></table></div>
+      <div class="sub-lbl t" data-en="Active Host Definition" data-bn="सक्रिय होस्ट परिभाषा">Active Host Definition</div>
+      <ul class="blist ok">
+        <li class="t" data-en="Min <strong>10 Valid Days</strong> per month" data-bn="प्रति महिना न्यूनतम <strong>१० वैध दिन</strong>">Min <strong>10 Valid Days</strong> per month</li>
+        <li class="t" data-en="Min <strong>20 Valid Hours</strong> per month" data-bn="प्रति महिना न्यूनतम <strong>२० वैध घंटा</strong>">Min <strong>20 Valid Hours</strong> per month</li>
+        <li class="t" data-en="Earn <strong>100,000+ Rubies</strong> from gifts per month" data-bn="प्रति महिना उपहारहरूबाट <strong>१,००,००० भन्दा बढि Rubies</strong> कमाउनुहोस्">Earn <strong>100,000+ Rubies</strong> from gifts per month</li>
+      </ul>
+      <div class="ibox danger">
+        <div class="ibox-lbl">⚠️ <span class="t" data-en="Important" data-bn="महत्वपूर्ण">Important</span></div>
+        <div class="ibox-txt t" data-en="Failing monthly target or active host conditions → <span class='rt'>Host Activation Salary cancelled.</span>" data-bn="मासिक लक्ष्य वा सक्रिय होस्ट शर्तहरू पूरा नगर्नु → <span class='rt'>होस्ट सक्रियकरण तनख्वाह रद्द।</span>">Failing monthly target or active host conditions → <span class="rt">Host Activation Salary cancelled.</span></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="03" data-bn="०३">03</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Commission Payout" data-bn="कमिशन भुक्तानी">Commission Payout</div><div class="acc-sub">When & How</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="ibox ok">
+        <div class="ibox-lbl">💰 <span class="t" data-en="Payment Schedule" data-bn="भुक्तानी समय तालिका">Payment Schedule</span></div>
+        <div class="ibox-txt t" data-en="Commission paid <strong>every Monday in Rubies.</strong>" data-bn="कमिशन <strong>प्रत्येक सोमबार Rubies मा</strong> भुक्तानी गरिन्छ।">Commission paid <strong>every Monday in Rubies.</strong></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="04" data-bn="०४">04</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Withdrawal Rules" data-bn="आहरण नियमहरू">Withdrawal Rules</div><div class="acc-sub">Fees & Limits</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <ul class="blist">
+        <li class="t" data-en="Only <strong>once per day</strong> allowed" data-bn="दिनमा मात्र <strong>एक पटक</strong> अनुमति दिइन्छ">Only <strong>once per day</strong> allowed</li>
+        <li class="t" data-en="Minimum: <span class='gt'>$10 USD</span>" data-bn="न्यूनतम: <span class='gt'>$१० USD</span>">Minimum: <span class="gt">$10 USD</span></li>
+      </ul>
+      <div class="sub-lbl t" data-en="Fee Structure" data-bn="शुल्क संरचना">Fee Structure</div>
+      <div class="tbl-wrap"><table><thead><tr><th class="t" data-en="Amount" data-bn="रकम">Amount</th><th class="t" data-en="Fee" data-bn="शुल्क">Fee</th></tr></thead>
+      <tbody>
+        <tr><td class="t" data-en="Under $100" data-bn="$१०० भन्दा कम">Under $100</td><td class="tr">$2 / transaction</td></tr>
+        <tr><td class="t" data-en="$100 or more" data-bn="$१०० वा अधिक">$100 or more</td><td class="tr">2% of amount</td></tr>
+      </tbody></table></div>
+    </div></div>
+  </div>
+
+  <div class="acc" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="05" data-bn="०५">05</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Agency Change Rules" data-bn="एजेन्सी परिवर्तन नियमहरू">Agency Change Rules</div><div class="acc-sub">When Changes Are Allowed</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <ul class="blist">
+        <li class="t" data-en="No activity for <strong>120 days</strong>" data-bn="<strong>१२० दिन</strong> कोई गतिविधि नहीं">No activity for <strong>120 days</strong></li>
+        <li class="t" data-en="No contact for <strong>2 weeks</strong>" data-bn="<strong>२ हप्ता</strong> कोई संपर्क नहीं">No contact for <strong>2 weeks</strong></li>
+        <li class="t" data-en="By mutual agreement" data-bn="पारस्परिक सहमति द्वारा">By mutual agreement</li>
+      </ul>
+      <div class="ibox danger">
+        <div class="ibox-lbl">⚠️ <span class="t" data-en="Important" data-bn="महत्वपूर्ण">Important</span></div>
+        <div class="ibox-txt t" data-en="Any fraud or misuse → <span class='rt'>Warning / Suspension / Ban</span>" data-bn="कुनै पनि धोखाधडी वा दुरुपयोग → <span class='rt'>Warning / Suspension / Ban</span>">Any fraud or misuse → <span class="rt">Warning / Suspension / Ban</span></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- WHATSAPP -->
+<div id="whatsapp" class="tab">
+  <button class="back-btn" onclick="go('main')">← <span class="t" data-en="Back" data-bn="ফিরে যান">Back</span></button>
+  <div class="page-title">WhatsApp Channel</div>
+  <div class="acc open" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-info"><div class="acc-title t" data-en="Join our WhatsApp Channel" data-bn="आमचो WhatsApp चैनेलमा सामिल हुनुहोस्">Join our WhatsApp Channel</div><div class="acc-sub t" data-en="Get latest updates & announcements" data-bn="सर्वश्रेष्ठ अपडेट र घोषणाएं प्राप्त करें">Get latest updates & announcements</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="ibox ok">
+        <div class="ibox-lbl">📢 <span class="t" data-en="Benefits" data-bn="लाभ">Benefits</span></div>
+        <div class="ibox-txt t" data-en="Get latest policy updates, event announcements & important notices directly." data-bn="सर्वश्रेष्ठ नीति अपडेट, घटना घोषणाएं और महत्वपूर्ण सूचनाएं सीधे प्राप्त करें।">Get latest policy updates, event announcements & important notices directly.</div>
+      </div>
+      <a href="https://whatsapp.com/channel/0029VahLyv62kAa4bqWOsk0d" target="_blank" class="cta wa">💬 <span class="t" data-en="Join WhatsApp Channel" data-bn="WhatsApp चैनेलमा सामिल हुनुहोस्">Join WhatsApp Channel</span></a>
+    </div></div>
+  </div>
+</div>
+
+<!-- CS TEAM -->
+<div id="cs" class="tab">
+  <button class="back-btn" onclick="go('main')">← <span class="t" data-en="Back" data-bn="ফিরে যান">Back</span></button>
+  <div class="page-title t" data-en="CS Team · Support" data-bn="CS टीम · सहायता">CS Team · Support</div>
+  <div class="acc open" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <div class="acc-num t" data-en="01" data-bn="०१">01</div>
+      <div class="acc-info"><div class="acc-title t" data-en="Contact Support" data-bn="सहायता से संपर्क करें">Contact Support</div><div class="acc-sub">Rizz Live CS Team</div></div>
+      <div class="acc-tog"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">
+      <div class="sub-lbl t" data-en="Contact Methods" data-bn="संपर्क के तरीके">Contact Methods</div>
+      <div class="contact-card"><div class="c-icon wa">💬</div><div><div class="c-lbl">WhatsApp</div><div class="c-val"><a href="https://wa.me/8801234567890" target="_blank" class="t" data-en="Send Message →" data-bn="संदेश भेजें →">Send Message →</a></div></div></div>
+      <a href="https://wa.me/8801234567890" target="_blank" class="cta wa">💬 <span class="t" data-en="Message Us Now" data-bn="अभी हमें संदेश दें">Message Us Now</span></a>
+    </div></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <img src="https://cdn.jsdelivr.net/gh/yourusername/rizzlive-assets@main/mascot.png" alt="Rizz Live Mascot" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 16px; display: block; filter: drop-shadow(0 0 30px rgba(0,200,122,0.3));">
+  <div class="ft-logo">Rizz <em>Live</em></div>
+  <div class="ft-copy t" data-en="© 2026 Rizz Live · All Rights Reserved<br>Official Policy Hub" data-bn="© २०२६ Rizz Live · सर्वाधिकार सुरक्षित<br>Official Policy Hub">© 2026 Rizz Live · All Rights Reserved<br>Official Policy Hub</div>
+</footer>
+
+<script>
+/* LANG */
+let lang='en';
+function toggleLang(){
+  const w=document.getElementById('langWrap');
+  w.classList.toggle('open');
+  if(w.classList.contains('open')){
+    setTimeout(()=>document.addEventListener('click',function oc(e){
+      if(!e.target.closest('.lang-wrap')){w.classList.remove('open');}
+      document.removeEventListener('click',oc);
+    }),50);
+  }
+}
+function setLang(l){
+  lang=l;
+  document.getElementById('langWrap').classList.remove('open');
+  document.getElementById('langFlag').textContent=l==='en'?'🇬🇧':'🇧🇩';
+  document.getElementById('langLbl').textContent=l==='en'?'EN':'বাং';
+  document.getElementById('optEn').classList.toggle('active',l==='en');
+  document.getElementById('optBn').classList.toggle('active',l==='bn');
+  document.body.classList.toggle('bn',l==='bn');
+  applyLang();
+}
+function applyLang(){
+  document.querySelectorAll('.t[data-'+lang+']').forEach(el=>{
+    el.innerHTML=el.getAttribute('data-'+lang);
+  });
+}
+
+/* ACCORDION */
+function toggleAcc(el){
+  const wasOpen=el.classList.contains('open');
+  el.classList.toggle('open');
+  const pts=el.querySelector('.acc-tog svg polyline');
+  if(pts)pts.setAttribute('points',el.classList.contains('open')?'18 15 12 9 6 15':'6 9 12 15 18 9');
+}
+
+/* NAVIGATE */
+function go(id,card){
+  if(card){
+    const rip=document.createElement('span');
+    rip.className='ripple';
+    const s=Math.max(card.offsetWidth,card.offsetHeight)*1.8;
+    rip.style.cssText=`width:${s}px;height:${s}px;left:${card.offsetWidth/2-s/2}px;top:${card.offsetHeight/2-s/2}px;`;
+    card.appendChild(rip);
+    setTimeout(()=>rip.remove(),650);
+  }
+  setTimeout(()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    const target=document.getElementById(id);
+    target.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    /* animate accordions */
+    target.querySelectorAll('.acc').forEach((a,i)=>{
+      a.style.animation='none';a.style.opacity='1';a.style.transform='none';
+      void a.offsetWidth;
+      a.style.animation='';
+      a.style.opacity='0';a.style.transform='translateY(16px)';
+      setTimeout(()=>{
+        a.style.opacity='1';a.style.transform='translateY(0)';
+        a.style.transition='opacity 0.35s ease, transform 0.35s ease';
+      },i*70+50);
+    });
+    /* re-apply language */
+    applyLang();
+  },card?140:0);
+}
+</script>
+</body>
+</html>
